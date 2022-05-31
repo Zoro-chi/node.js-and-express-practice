@@ -2,6 +2,7 @@
 
 const express = require("express");
 const bodyParser = require("body-parser");
+const req = require("express/lib/request");
 const MongoClient = require("mongodb").MongoClient;
 const app = express();
 
@@ -39,6 +40,22 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true })
     // CREATES A COLLECTION
     const quoteCollection = db.collection("quotes");
 
+    quoteCollection
+      .findOneAndUpdate(
+        { name: "first" },
+        {
+          $set: {
+            // name: req.body.name,
+            // quote: req.body.quote,
+          },
+        },
+        {
+          upsert: true,
+        }
+      )
+      .then((result) => console.log(result))
+      .catch((err) => console.error(err));
+
     app.listen(3000, () => {
       console.log("Listening on 3000");
     });
@@ -71,7 +88,33 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true })
     });
 
     app.put("/quotes", (req, res) => {
-      console.log(req.body);
+      quoteCollection
+        .findOneAndUpdate(
+          { name: "first" },
+          {
+            $set: {
+              name: req.body.name,
+              quote: req.body.quote,
+            },
+          },
+          {
+            upsert: true,
+          }
+        )
+        .then((result) => res.json("success"))
+        .catch((err) => console.error(err));
+    });
+
+    app.delete("/quotes", (req, res) => {
+      quoteCollection
+        .deleteOne({ name: req.body.name })
+        .then((result) => {
+          if (result.deletedCount === 0) {
+            return res.json("No quote to delete");
+          }
+          res.json('Deleted Darth Vadar"s quote');
+        })
+        .catch((err) => console.error(err));
     });
   })
   .catch((error) => console.error(error));
