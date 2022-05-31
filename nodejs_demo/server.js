@@ -7,10 +7,12 @@ const app = express();
 
 // Make sure you place body-parser before your CRUD handlers!
 app.use(bodyParser.urlencoded({ extended: true }));
+// TELLS EXPRESS TO MAKE THE PUBLIC FOLDER ACCESSIBLE TO THE PUBLIC
+app.use(express.static("public"));
+// TELLS SERVER TO USE JSON TO PARSE
+app.use(bodyParser.json());
 // THIS TELLS EXPRESS TO USE EJS AS TEMPLATE ENGINE
 app.set("view engine", "ejs");
-// TELLS EXPRESS TO MAKE THE PUBLIC FOLDER ACCESSIBLE TO THE PUBLIC
-app.use(express.static('public'))
 
 // app.listen(3000, () => {
 //   console.log("Listening on 3000");
@@ -66,6 +68,10 @@ MongoClient.connect(connectionString, { useUnifiedTopology: true })
           console.log(err);
         });
       // console.log(req.body);
+    });
+
+    app.put("/quotes", (req, res) => {
+      console.log(req.body);
     });
   })
   .catch((error) => console.error(error));
