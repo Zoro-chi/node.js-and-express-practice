@@ -9,6 +9,8 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 // THIS TELLS EXPRESS TO USE EJS AS TEMPLATE ENGINE
 app.set("view engine", "ejs");
+// TELLS EXPRESS TO MAKE THE PUBLIC FOLDER ACCESSIBLE TO THE PUBLIC
+app.use(express.static('public'))
 
 // app.listen(3000, () => {
 //   console.log("Listening on 3000");
